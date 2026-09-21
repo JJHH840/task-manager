@@ -16,6 +16,12 @@ public class TestDataInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // 💡 DB에 이미 태스크가 존재하면 더미 데이터 생성을 건너뜁니다!
+        if (taskRepository.count() > 0) {
+            System.out.println("====== [기존 데이터가 존재하므로 더미 생성을 건너뜁니다] ======");
+            return;
+        }
+
         System.out.println("====== [테스트 더미 데이터 자동 생성 시작] ======");
         // 태스크 3개 생성
         for (int i = 1; i <= 3; i++) {

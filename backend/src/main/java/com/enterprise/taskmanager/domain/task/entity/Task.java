@@ -1,7 +1,12 @@
 package com.enterprise.taskmanager.domain.task.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.enterprise.taskmanager.domain.comment.entity.Comment;
 import com.enterprise.taskmanager.global.common.BaseTimeEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,6 +39,10 @@ public class Task extends BaseTimeEntity {
     @Enumerated(EnumType.STRING) /* 숫자가 아닌 문자열("TODO") 그대로 DB에 저장 (절대 ORDINAL 쓰지 말 것) */
     @Column(nullable = false)
     private TaskStatus status;
+
+    // 부모 삭제 시 자식 댓글들도 함께 연쇄 삭제
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     // 생성자: 처음 태스크가 생성될 때는 무조건 status가 TODO로 시작하도록 강제함
     public Task(String title, String description) {
